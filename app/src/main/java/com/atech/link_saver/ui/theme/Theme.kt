@@ -38,6 +38,7 @@ val grid_0_5 = 4.dp
 val grid_1 = 8.dp
 val grid_2 = 16.dp
 val grid_3 = 24.dp
+val grid_4 = 32.dp
 
 @Composable
 fun LinkSaverTheme(

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.atech.link_saver.ui.screens.home.HomeScreenState
 import com.atech.link_saver.ui.screens.home.compose.HomeScreen
 import com.atech.link_saver.utils.animatedComposable
 
@@ -28,7 +29,9 @@ fun MainNavigation(
         animatedComposable(
             route = NavRoutes.HomeScreen.route,
         ) {
-            HomeScreen()
+            HomeScreen(
+                state = HomeScreenState()
+            )
         }
     }
 }
