@@ -13,4 +13,26 @@ class HomeViewModel @Inject constructor(
     private val _addLinkState = mutableStateOf(AddLinkState())
     internal val addLinkState: State<AddLinkState> get() = _addLinkState
 
+
+    private val _homeState = mutableStateOf(HomeState())
+    internal val homeState: State<HomeState> get() = _homeState
+
+
+    fun onAddLinkEvent(event: AddLinkEvents) {
+        when (event) {
+            is AddLinkEvents.OnShortDesChange ->
+                _addLinkState.value = _addLinkState.value.copy(shortDes = event.shortDes)
+
+            is AddLinkEvents.OnLinkChange ->
+                _addLinkState.value = _addLinkState.value.copy(
+                    link = event.link
+                )
+
+            AddLinkEvents.OnClearRequest -> _addLinkState.value = AddLinkState()
+
+            AddLinkEvents.OnCancelClick -> {}
+            AddLinkEvents.OnSaveClick -> {}
+        }
+    }
+
 }

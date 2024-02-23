@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atech.link_saver.ui.comman.EditText
+import com.atech.link_saver.ui.screens.home.AddLinkEvents
 import com.atech.link_saver.ui.screens.home.AddLinkState
 import com.atech.link_saver.ui.theme.LinkSaverTheme
 import com.atech.link_saver.ui.theme.grid_1
@@ -31,19 +32,18 @@ import com.atech.link_saver.ui.theme.grid_1
 internal fun AddLink(
     modifier: Modifier = Modifier,
     state: AddLinkState = AddLinkState(),
-    onSaveClick: () -> Unit = {},
-    onCancelClick: () -> Unit = {}
+    onEvent: (AddLinkEvents) -> Unit = {},
+    discussionRequest: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(grid_1),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+        verticalArrangement = Arrangement.Center,
     ) {
-        EditText(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = grid_1, top = grid_1),
+        EditText(modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = grid_1, top = grid_1),
             value = state.link,
             placeholder = "Enter Link",
             leadingIcon = {
@@ -51,8 +51,7 @@ internal fun AddLink(
             },
             supportingText = {
                 Text(
-                    text =
-                    if (state.isLinkError) "Link is not valid"
+                    text = if (state.isLinkError) "Link is not valid"
                     else "Required",
                 )
             },
@@ -60,11 +59,16 @@ internal fun AddLink(
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
             ),
+            onValueChange = {
+                onEvent(AddLinkEvents.OnLinkChange(it))
+            },
+            clearIconClick = {
+                onEvent(AddLinkEvents.OnLinkChange(""))
+            }
         )
-        EditText(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = grid_1),
+        EditText(modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = grid_1),
             value = state.shortDes,
             placeholder = "Enter Short Description",
             keyboardOptions = KeyboardOptions(
@@ -74,6 +78,12 @@ internal fun AddLink(
             ),
             leadingIcon = {
                 Icon(imageVector = Icons.Outlined.Description, contentDescription = null)
+            },
+            onValueChange = {
+                onEvent(AddLinkEvents.OnShortDesChange(it))
+            },
+            clearIconClick = {
+                onEvent(AddLinkEvents.OnShortDesChange(""))
             }
         )
         Row(
@@ -84,28 +94,30 @@ internal fun AddLink(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextButton(
-                onClick = onCancelClick,
-                modifier = Modifier
+                onClick = {
+                    onEvent(AddLinkEvents.OnCancelClick)
+                    discussionRequest()
+                }, modifier = Modifier
                     .padding(end = grid_1)
                     .weight(.5f)
 
             ) {
                 Icon(imageVector = Icons.Outlined.Cancel, contentDescription = null)
                 Text(
-                    text = "Cancel",
-                    modifier = Modifier.padding(start = grid_1)
+                    text = "Cancel", modifier = Modifier.padding(start = grid_1)
                 )
             }
             TextButton(
-                onClick = onSaveClick,
-                modifier = Modifier
+                onClick = {
+                    onEvent(AddLinkEvents.OnSaveClick)
+                    discussionRequest.invoke()
+                }, modifier = Modifier
                     .padding(end = grid_1)
                     .weight(.5f)
             ) {
                 Icon(imageVector = Icons.Outlined.Save, contentDescription = null)
                 Text(
-                    text = "Save",
-                    modifier = Modifier.padding(start = grid_1)
+                    text = "Save", modifier = Modifier.padding(start = grid_1)
                 )
             }
         }

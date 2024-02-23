@@ -12,6 +12,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +30,7 @@ import com.atech.link_saver.ui.comman.BottomAppbar
 import com.atech.link_saver.ui.comman.EmptyItemComponent
 import com.atech.link_saver.ui.comman.LinkItem
 import com.atech.link_saver.ui.comman.MainContainer
+import com.atech.link_saver.ui.screens.home.AddLinkEvents
 import com.atech.link_saver.ui.screens.home.AddLinkState
 import com.atech.link_saver.ui.screens.home.HomeState
 import com.atech.link_saver.ui.theme.LinkSaverTheme
@@ -41,19 +43,24 @@ internal fun HomeScreen(
     modifier: Modifier = Modifier,
     title: String = "Home",
     state: HomeState,
+    addLinkState: AddLinkState,
+    onAddLinkEvent: (AddLinkEvents) -> Unit = {},
     navHostController: NavController = rememberNavController()
 ) {
     val lazyColumnScrollState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = sheetState.isVisible) {
+        onAddLinkEvent.invoke(AddLinkEvents.OnClearRequest)
+    }
     MainContainer(
         modifier = modifier,
         title = title,
         bottomAppbar = {
             val navBackStackEntry = navHostController.currentBackStackEntryAsState()
             AnimatedVisibility(
-                visible = !lazyColumnScrollState.isScrollInProgress ,
+                visible = !lazyColumnScrollState.isScrollInProgress,
                 enter = slideInVertically { it * 2 },
                 exit = slideOutVertically { it * 2 },
             ) {
@@ -88,9 +95,10 @@ internal fun HomeScreen(
         }
         if (showBottomSheet) {
             HomeScreenBottomSheet(
-                addLinkState = AddLinkState(),
+                addLinkState = addLinkState,
                 sheetState = sheetState,
                 scope = scope,
+                onEvent = onAddLinkEvent,
                 onDismiss = { showBottomSheet = false }
             )
         }
@@ -104,6 +112,7 @@ internal fun HomeScreenBottomSheet(
     addLinkState: AddLinkState,
     sheetState: SheetState,
     scope: CoroutineScope,
+    onEvent: (AddLinkEvents) -> Unit = {},
     onDismiss: () -> Unit
 ) {
     ModalBottomSheet(
@@ -113,7 +122,8 @@ internal fun HomeScreenBottomSheet(
         AddLink(
             modifier = modifier,
             state = addLinkState,
-            onCancelClick = {
+            onEvent = onEvent,
+            discussionRequest = {
                 scope.launch { sheetState.hide() }
                     .invokeOnCompletion {
                         if (!sheetState.isVisible) {
@@ -130,7 +140,8 @@ internal fun HomeScreenBottomSheet(
 private fun HomeScreenPreview() {
     LinkSaverTheme {
         HomeScreen(
-            state = HomeState()
+            state = HomeState(),
+            addLinkState = AddLinkState()
         )
     }
 }

@@ -8,9 +8,10 @@ import com.atech.core.room.link.LinkModel
 import com.atech.link_saver.ui.screens.archive.compose.ArchiveScreen
 import com.atech.link_saver.ui.screens.bin.BinState
 import com.atech.link_saver.ui.screens.bin.compose.BinScreen
-import com.atech.link_saver.ui.screens.home.HomeState
+import com.atech.link_saver.ui.screens.home.HomeViewModel
 import com.atech.link_saver.ui.screens.home.compose.HomeScreen
 import com.atech.link_saver.utils.animatedComposable
+import com.atech.link_saver.utils.sharedViewModel
 
 sealed class NavRoutes(val route: String) {
     data object HomeScreen : NavRoutes("home_screen")
@@ -103,9 +104,12 @@ internal fun MainNavigation(
         animatedComposable(
             route = NavRoutes.HomeScreen.route,
         ) {
+            val viewModel = it.sharedViewModel<HomeViewModel>(navController = navHostController)
             HomeScreen(
-                state = HomeState(),
-                navHostController = navHostController
+                state = viewModel.homeState.value,
+                navHostController = navHostController,
+                addLinkState = viewModel.addLinkState.value,
+                onAddLinkEvent = viewModel::onAddLinkEvent,
             )
         }
         animatedComposable(
