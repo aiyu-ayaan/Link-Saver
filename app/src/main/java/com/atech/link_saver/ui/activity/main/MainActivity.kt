@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.atech.link_saver.navigation.MainNavigation
 import com.atech.link_saver.ui.theme.LinkSaverTheme
 import dagger.hilt.android.AndroidEntryPoint
 

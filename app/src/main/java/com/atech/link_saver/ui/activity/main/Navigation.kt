@@ -1,11 +1,14 @@
-package com.atech.link_saver.navigation
+package com.atech.link_saver.ui.activity.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.atech.core.room.link.LinkModel
-import com.atech.link_saver.ui.screens.home.HomeScreenState
+import com.atech.link_saver.ui.screens.archive.compose.ArchiveScreen
+import com.atech.link_saver.ui.screens.bin.BinState
+import com.atech.link_saver.ui.screens.bin.compose.BinScreen
+import com.atech.link_saver.ui.screens.home.HomeState
 import com.atech.link_saver.ui.screens.home.compose.HomeScreen
 import com.atech.link_saver.utils.animatedComposable
 
@@ -86,8 +89,9 @@ val list = listOf(
         sortDes = "Stackoverflow",
     ),
 )
+
 @Composable
-fun MainNavigation(
+internal fun MainNavigation(
     navHostController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -100,8 +104,24 @@ fun MainNavigation(
             route = NavRoutes.HomeScreen.route,
         ) {
             HomeScreen(
-                state = HomeScreenState(),
+                state = HomeState(),
                 navHostController = navHostController
+            )
+        }
+        animatedComposable(
+            route = NavRoutes.ArchiveScreen.route,
+        ) {
+            ArchiveScreen(
+                navHostController = navHostController,
+                state = BinState()
+            )
+        }
+        animatedComposable(
+            route = NavRoutes.BinScreen.route,
+        ) {
+            BinScreen(
+                navHostController = navHostController,
+                state = BinState()
             )
         }
     }

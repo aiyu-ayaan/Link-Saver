@@ -5,4 +5,6 @@
     <string name="Archive">Archive</string>
     <string name="Bin">Bin</string>
     <string name="press_to_add_link">Press + to add link.</string>
+    <string name="no_archive">No Archive</string>
+    <string name="bin_is_empty">Bin is empty</string>
 </resources>
