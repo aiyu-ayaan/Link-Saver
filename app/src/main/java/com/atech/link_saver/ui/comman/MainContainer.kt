@@ -85,6 +85,7 @@ fun BottomAppbar(
     modifier: Modifier = Modifier,
     backStackEntry: State<NavBackStackEntry?> = remember { mutableStateOf(null) },
     onClick: (route: String) -> Unit = {},
+    onAddLinkClick : () -> Unit = {}
 ) {
     val navigationItems = listOf(
         NavBarModel(
@@ -135,7 +136,7 @@ fun BottomAppbar(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             FloatingActionButton(
-                onClick = { },
+                onClick = onAddLinkClick,
                 modifier = Modifier.size(40.dp),
                 shape = CircleShape,
                 containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
