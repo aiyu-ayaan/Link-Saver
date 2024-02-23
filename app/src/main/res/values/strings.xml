@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Link-Saver</string>
     <string name="img">Loading Image</string>
+    <string name="Home">Home</string>
+    <string name="Archive">Archive</string>
+    <string name="Bin">Bin</string>
+    <string name="press_to_add_link">Press + to add link.</string>
 </resources>
