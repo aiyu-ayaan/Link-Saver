@@ -106,10 +106,11 @@ internal fun MainNavigation(
         ) {
             val viewModel = it.sharedViewModel<HomeViewModel>(navController = navHostController)
             HomeScreen(
-                state = viewModel.homeState.value,
+                /*state = viewModel.homeState.value,*/
                 navHostController = navHostController,
                 addLinkState = viewModel.addLinkState.value,
                 onAddLinkEvent = viewModel::onAddLinkEvent,
+                pagingLinkFlow = viewModel.links,
             )
         }
         animatedComposable(

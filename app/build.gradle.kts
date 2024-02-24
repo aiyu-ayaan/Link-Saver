@@ -81,4 +81,7 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.kt.coil.compose)
     implementation(libs.coil.svg)
+
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
 }

@@ -5,7 +5,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -25,6 +24,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import com.atech.core.room.link.LinkModel
 import com.atech.link_saver.R
 import com.atech.link_saver.ui.comman.BottomAppbar
 import com.atech.link_saver.ui.comman.EmptyItemComponent
@@ -32,9 +35,10 @@ import com.atech.link_saver.ui.comman.LinkItem
 import com.atech.link_saver.ui.comman.MainContainer
 import com.atech.link_saver.ui.screens.home.AddLinkEvents
 import com.atech.link_saver.ui.screens.home.AddLinkState
-import com.atech.link_saver.ui.screens.home.HomeState
 import com.atech.link_saver.ui.theme.LinkSaverTheme
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +46,7 @@ import kotlinx.coroutines.launch
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
     title: String = "Home",
-    state: HomeState,
+    pagingLinkFlow: Flow<PagingData<LinkModel>>,
     addLinkState: AddLinkState,
     onAddLinkEvent: (AddLinkEvents) -> Unit = {},
     navHostController: NavController = rememberNavController()
@@ -50,6 +54,10 @@ internal fun HomeScreen(
     val lazyColumnScrollState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+    var link = pagingLinkFlow.collectAsLazyPagingItems()
+    LaunchedEffect(key1 = pagingLinkFlow) {
+
+    }
     var showBottomSheet by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = sheetState.isVisible) {
         onAddLinkEvent.invoke(AddLinkEvents.OnClearRequest)
@@ -75,7 +83,7 @@ internal fun HomeScreen(
             }
         }
     ) { padding, scrollState ->
-        if (state.items.isEmpty()) {
+        if (link.itemCount == 0) {
             EmptyItemComponent(
                 modifier = Modifier.fillMaxSize(),
                 text = stringResource(R.string.press_to_add_link),
@@ -88,8 +96,14 @@ internal fun HomeScreen(
                 contentPadding = padding,
                 state = lazyColumnScrollState
             ) {
-                items(state.items, key = { it.link }) { item ->
-                    LinkItem(model = item)
+                items(
+                    count = link.itemCount,
+                    key = link.itemKey { model -> model.link },
+                    contentType = link.itemKey { model -> model.link }
+                ) {
+                    link[it]?.let { item ->
+                        LinkItem(model = item)
+                    }
                 }
             }
         }
@@ -140,8 +154,8 @@ internal fun HomeScreenBottomSheet(
 private fun HomeScreenPreview() {
     LinkSaverTheme {
         HomeScreen(
-            state = HomeState(),
-            addLinkState = AddLinkState()
+            addLinkState = AddLinkState(),
+            pagingLinkFlow = emptyFlow()
         )
     }
 }

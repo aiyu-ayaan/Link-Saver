@@ -64,8 +64,7 @@ internal fun AddLink(
             },
             clearIconClick = {
                 onEvent(AddLinkEvents.OnLinkChange(""))
-            }
-        )
+            })
         EditText(modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = grid_1),
@@ -84,8 +83,7 @@ internal fun AddLink(
             },
             clearIconClick = {
                 onEvent(AddLinkEvents.OnShortDesChange(""))
-            }
-        )
+            })
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,7 +106,7 @@ internal fun AddLink(
                 )
             }
             TextButton(
-                onClick = {
+                enabled = !state.isLinkError, onClick = {
                     onEvent(AddLinkEvents.OnSaveClick)
                     discussionRequest.invoke()
                 }, modifier = Modifier
